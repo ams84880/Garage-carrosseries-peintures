@@ -12,8 +12,8 @@ import Home from "./pages/Home";
  * - Orange accent (#E67E22) for CTAs and highlights
  * - Minimal, professional aesthetic
  */
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path="/" component={Home} />

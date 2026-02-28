@@ -3,20 +3,13 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import GarageMap from "@/components/GarageMap";
-import { Wrench, Palette, Shield, Clock, Phone, Mail, MapPin, ChevronRight, Star } from "lucide-react";
+import { Wrench, Palette, Shield, Clock, Phone, Mail, MapPin, ChevronRight, Star, Send } from "lucide-react";
 import { useState } from "react";
-
-/**
- * Industrial Minimalism Design Philosophy:
- * - Stark contrast between black, white, and orange
- * - Geometric shapes and clean lines
- * - Professional, technical aesthetic
- * - Orange accent color for CTAs and highlights
- * - Minimal animations with purpose
- */
+import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 
 export default function Home() {
-  const [formData, setFormData] = useState({
+  const [appointmentForm, setAppointmentForm] = useState({
     name: "",
     email: "",
     phone: "",
@@ -25,16 +18,55 @@ export default function Home() {
     message: "",
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const [reviewForm, setReviewForm] = useState({
+    name: "",
+    email: "",
+    rating: 5,
+    title: "",
+    content: "",
+    service: "",
+  });
+
+  const appointmentMutation = trpc.appointments.create.useMutation({
+    onSuccess: () => {
+      toast.success("Demande de rendez-vous envoyée avec succès!");
+      setAppointmentForm({ name: "", email: "", phone: "", vehicle: "", service: "", message: "" });
+    },
+    onError: () => {
+      toast.error("Erreur lors de l'envoi de la demande");
+    },
+  });
+
+  const reviewMutation = trpc.reviews.create.useMutation({
+    onSuccess: () => {
+      toast.success("Avis envoyé avec succès! Il sera approuvé prochainement.");
+      setReviewForm({ name: "", email: "", rating: 5, title: "", content: "", service: "" });
+    },
+    onError: () => {
+      toast.error("Erreur lors de l'envoi de l'avis");
+    },
+  });
+
+  const { data: approvedReviews } = trpc.reviews.listApproved.useQuery();
+
+  const handleAppointmentChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setAppointmentForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setReviewForm(prev => ({ ...prev, [name]: value === "rating" ? parseInt(value) : value }));
+  };
+
+  const handleAppointmentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    // Reset form
-    setFormData({ name: "", email: "", phone: "", vehicle: "", service: "", message: "" });
+    appointmentMutation.mutate(appointmentForm);
+  };
+
+  const handleReviewSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    reviewMutation.mutate(reviewForm);
   };
 
   return (
@@ -49,7 +81,7 @@ export default function Home() {
           <div className="hidden md:flex items-center gap-8">
             <a href="#services" className="hover:text-accent transition-colors">Services</a>
             <a href="#gallery" className="hover:text-accent transition-colors">Galerie</a>
-            <a href="#about" className="hover:text-accent transition-colors">À propos</a>
+            <a href="#reviews" className="hover:text-accent transition-colors">Avis</a>
             <a href="#contact" className="hover:text-accent transition-colors">Contact</a>
           </div>
           <Button className="bg-accent text-accent-foreground hover:bg-orange-700">Devis</Button>
@@ -192,44 +224,137 @@ export default function Home() {
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-20 bg-secondary/5 border-t-8 border-accent">
-        <div className="container grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          <div>
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center gap-3">
-                <div className="w-1 h-8 bg-accent"></div>
-                <span className="text-accent font-semibold">À PROPOS</span>
-              </div>
-              <h2 className="section-title">Expertise & Professionnalisme</h2>
+      {/* Reviews Section */}
+      <section id="reviews" className="py-20 bg-secondary/5 border-t-8 border-accent">
+        <div className="container">
+          <div className="space-y-4 mb-16">
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-8 bg-accent"></div>
+              <span className="text-accent font-semibold">TÉMOIGNAGES</span>
             </div>
-
-            <p className="text-lg text-muted-foreground mb-6">
-              Depuis plus de 25 ans, El Moussaoui Auto Étoiles se spécialise dans la carrosserie et la peinture automobile de qualité professionnelle. Nous mettons à disposition notre expertise et notre passion pour chaque projet.
+            <h2 className="section-title">Avis Clients</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Découvrez ce que nos clients pensent de nos services.
             </p>
-
-            <ul className="space-y-4">
-              {[
-                "Équipe de techniciens certifiés et expérimentés",
-                "Équipements modernes et techniques de pointe",
-                "Matériaux de peinture de haute qualité",
-                "Garantie satisfaction sur tous les travaux"
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-accent flex-shrink-0 mt-1"></div>
-                  <span className="text-lg">{item}</span>
-                </li>
-              ))}
-            </ul>
           </div>
 
-          <div className="relative h-96">
-            <img 
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/workshop-overview-RSiXBenAPvQaXXfaBtwpo6.webp"
-              alt="Atelier professionnel"
-              className="w-full h-full object-cover border-4 border-accent"
-            />
-            <div className="absolute -top-4 -left-4 w-24 h-24 bg-accent/20 border-2 border-accent"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+            {approvedReviews && approvedReviews.length > 0 ? (
+              approvedReviews.map((review) => (
+                <Card key={review.id} className="service-card">
+                  <div className="flex items-center gap-2 mb-4">
+                    {[...Array(review.rating)].map((_, i) => (
+                      <Star key={i} className="w-5 h-5 text-accent fill-accent" />
+                    ))}
+                  </div>
+                  <h3 className="text-lg font-bold mb-2">{review.title}</h3>
+                  <p className="text-muted-foreground mb-4">{review.content}</p>
+                  <p className="text-sm font-semibold">{review.name}</p>
+                </Card>
+              ))
+            ) : (
+              <p className="text-muted-foreground col-span-full">Aucun avis approuvé pour le moment.</p>
+            )}
+          </div>
+
+          {/* Add Review Form */}
+          <div className="bg-card border border-border p-8 rounded-sm">
+            <h3 className="text-2xl font-bold mb-6">Laisser un Avis</h3>
+            
+            <form onSubmit={handleReviewSubmit} className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Nom *</label>
+                  <Input 
+                    type="text" 
+                    name="name"
+                    value={reviewForm.name}
+                    onChange={handleReviewChange}
+                    placeholder="Votre nom"
+                    required
+                    className="bg-background border-border"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Email *</label>
+                  <Input 
+                    type="email" 
+                    name="email"
+                    value={reviewForm.email}
+                    onChange={handleReviewChange}
+                    placeholder="votre@email.com"
+                    required
+                    className="bg-background border-border"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Note *</label>
+                  <select 
+                    name="rating"
+                    value={reviewForm.rating}
+                    onChange={handleReviewChange}
+                    className="w-full px-3 py-2 border border-border bg-background rounded-sm"
+                  >
+                    <option value="5">5 étoiles - Excellent</option>
+                    <option value="4">4 étoiles - Très bon</option>
+                    <option value="3">3 étoiles - Bon</option>
+                    <option value="2">2 étoiles - Acceptable</option>
+                    <option value="1">1 étoile - Mauvais</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Service</label>
+                  <select 
+                    name="service"
+                    value={reviewForm.service}
+                    onChange={handleReviewChange}
+                    className="w-full px-3 py-2 border border-border bg-background rounded-sm"
+                  >
+                    <option value="">Sélectionner un service</option>
+                    <option value="painting">Peinture</option>
+                    <option value="bodywork">Réparation carrosserie</option>
+                    <option value="protection">Protection & Vernis</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2">Titre *</label>
+                <Input 
+                  type="text" 
+                  name="title"
+                  value={reviewForm.title}
+                  onChange={handleReviewChange}
+                  placeholder="Titre de votre avis"
+                  required
+                  className="bg-background border-border"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold mb-2">Votre avis *</label>
+                <Textarea 
+                  name="content"
+                  value={reviewForm.content}
+                  onChange={handleReviewChange}
+                  placeholder="Partagez votre expérience..."
+                  required
+                  className="bg-background border-border min-h-24"
+                />
+              </div>
+
+              <Button 
+                type="submit"
+                disabled={reviewMutation.isPending}
+                className="w-full bg-accent text-accent-foreground hover:bg-orange-700 py-6 text-lg font-semibold"
+              >
+                {reviewMutation.isPending ? "Envoi..." : "Envoyer mon avis"}
+                <Send className="w-5 h-5 ml-2" />
+              </Button>
+            </form>
           </div>
         </div>
       </section>
@@ -289,14 +414,14 @@ export default function Home() {
             <div className="bg-card border border-border p-8">
               <h3 className="text-2xl font-bold mb-6">Demander un Devis</h3>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={handleAppointmentSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-semibold mb-2">Nom complet *</label>
                   <Input 
                     type="text" 
                     name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
+                    value={appointmentForm.name}
+                    onChange={handleAppointmentChange}
                     placeholder="Jean Dupont"
                     required
                     className="bg-background border-border"
@@ -309,8 +434,8 @@ export default function Home() {
                     <Input 
                       type="email" 
                       name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
+                      value={appointmentForm.email}
+                      onChange={handleAppointmentChange}
                       placeholder="jean@example.com"
                       required
                       className="bg-background border-border"
@@ -321,8 +446,8 @@ export default function Home() {
                     <Input 
                       type="tel" 
                       name="phone"
-                      value={formData.phone}
-                      onChange={handleInputChange}
+                      value={appointmentForm.phone}
+                      onChange={handleAppointmentChange}
                       placeholder="+33 6 12 34 56 78"
                       className="bg-background border-border"
                     />
@@ -334,8 +459,8 @@ export default function Home() {
                   <Input 
                     type="text" 
                     name="vehicle"
-                    value={formData.vehicle}
-                    onChange={handleInputChange}
+                    value={appointmentForm.vehicle}
+                    onChange={handleAppointmentChange}
                     placeholder="Marque et modèle"
                     className="bg-background border-border"
                   />
@@ -345,8 +470,8 @@ export default function Home() {
                   <label className="block text-sm font-semibold mb-2">Service demandé</label>
                   <select 
                     name="service"
-                    value={formData.service}
-                    onChange={handleInputChange}
+                    value={appointmentForm.service}
+                    onChange={handleAppointmentChange}
                     className="w-full px-3 py-2 border border-border bg-background rounded-sm"
                   >
                     <option value="">Sélectionner un service</option>
@@ -361,8 +486,8 @@ export default function Home() {
                   <label className="block text-sm font-semibold mb-2">Message</label>
                   <Textarea 
                     name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
+                    value={appointmentForm.message}
+                    onChange={handleAppointmentChange}
                     placeholder="Décrivez votre projet..."
                     className="bg-background border-border min-h-24"
                   />
@@ -370,9 +495,10 @@ export default function Home() {
 
                 <Button 
                   type="submit"
+                  disabled={appointmentMutation.isPending}
                   className="w-full bg-accent text-accent-foreground hover:bg-orange-700 py-6 text-lg font-semibold"
                 >
-                  Envoyer ma demande
+                  {appointmentMutation.isPending ? "Envoi..." : "Envoyer ma demande"}
                   <ChevronRight className="w-5 h-5 ml-2" />
                 </Button>
               </form>
@@ -429,8 +555,8 @@ export default function Home() {
             <div>
               <p className="font-semibold mb-4">Entreprise</p>
               <ul className="space-y-2 text-background/80">
-                <li><a href="#about" className="hover:text-accent transition-colors">À propos</a></li>
                 <li><a href="#gallery" className="hover:text-accent transition-colors">Portfolio</a></li>
+                <li><a href="#reviews" className="hover:text-accent transition-colors">Avis</a></li>
                 <li><a href="#contact" className="hover:text-accent transition-colors">Contact</a></li>
               </ul>
             </div>
