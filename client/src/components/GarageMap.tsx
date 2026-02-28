@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import { MapView } from './Map';
 
 /**
  * GarageMap Component - Affiche la localisation du garage sur Google Maps
@@ -16,125 +17,23 @@ export default function GarageMap({
   lat = 43.9352,
   lng = 4.8084
 }: GarageMapProps) {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<google.maps.Map | null>(null);
+  const mapRef = useRef<google.maps.Map | null>(null);
+  const infoWindowRef = useRef<google.maps.InfoWindow | null>(null);
 
-  useEffect(() => {
-    if (!mapContainer.current) return;
+  const handleMapReady = (map: google.maps.Map) => {
+    mapRef.current = map;
 
-    // Initialiser la carte
-    map.current = new google.maps.Map(mapContainer.current, {
-      zoom: 15,
-      center: { lat, lng },
-      styles: [
-        {
-          elementType: "geometry",
-          stylers: [{ color: "#f5f5f5" }],
-        },
-        {
-          elementType: "labels.icon",
-          stylers: [{ visibility: "off" }],
-        },
-        {
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#616161" }],
-        },
-        {
-          elementType: "labels.text.stroke",
-          stylers: [{ color: "#f5f5f5" }],
-        },
-        {
-          featureType: "administrative.land_parcel",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#bdbdbd" }],
-        },
-        {
-          featureType: "poi",
-          elementType: "geometry",
-          stylers: [{ color: "#eeeeee" }],
-        },
-        {
-          featureType: "poi",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#757575" }],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "geometry",
-          stylers: [{ color: "#e5e5e5" }],
-        },
-        {
-          featureType: "poi.park",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#9e9e9e" }],
-        },
-        {
-          featureType: "road",
-          elementType: "geometry",
-          stylers: [{ color: "#ffffff" }],
-        },
-        {
-          featureType: "road.arterial",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#757575" }],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "geometry",
-          stylers: [{ color: "#dadada" }],
-        },
-        {
-          featureType: "road.highway",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#616161" }],
-        },
-        {
-          featureType: "road.local",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#9e9e9e" }],
-        },
-        {
-          featureType: "transit.line",
-          elementType: "geometry",
-          stylers: [{ color: "#e5e5e5" }],
-        },
-        {
-          featureType: "transit.station",
-          elementType: "geometry",
-          stylers: [{ color: "#eeeeee" }],
-        },
-        {
-          featureType: "water",
-          elementType: "geometry",
-          stylers: [{ color: "#c9c9c9" }],
-        },
-        {
-          featureType: "water",
-          elementType: "labels.text.fill",
-          stylers: [{ color: "#9e9e9e" }],
-        },
-      ],
-    });
-
-    // Ajouter un marqueur
-    const marker = new google.maps.Marker({
+    // Ajouter un marqueur avec l'API AdvancedMarkerElement
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+      map,
       position: { lat, lng },
-      map: map.current,
       title: "El Moussaoui Auto Étoiles",
-      icon: {
-        path: google.maps.SymbolPath.CIRCLE,
-        scale: 12,
-        fillColor: "#E67E22",
-        fillOpacity: 1,
-        strokeColor: "#FFFFFF",
-        strokeWeight: 2,
-      },
     });
 
-    // Ajouter une infowindow
-    const infowindow = new google.maps.InfoWindow({
+    // Créer l'infowindow
+    infoWindowRef.current = new google.maps.InfoWindow({
       content: `
-        <div style="padding: 10px; font-family: Arial, sans-serif;">
+        <div style="padding: 12px; font-family: Arial, sans-serif; max-width: 280px;">
           <h3 style="margin: 0 0 8px 0; color: #0F0F0F; font-size: 16px; font-weight: bold;">El Moussaoui Auto Étoiles</h3>
           <p style="margin: 4px 0; color: #6B6B6B; font-size: 13px;">
             <strong>Adresse:</strong><br/>
@@ -154,24 +53,31 @@ export default function GarageMap({
       `,
     });
 
-    marker.addListener("click", () => {
-      infowindow.open(map.current, marker);
-    });
-
     // Ouvrir l'infowindow au chargement
-    infowindow.open(map.current, marker);
+    if (mapRef.current && infoWindowRef.current) {
+      infoWindowRef.current.open({
+        anchor: marker,
+        map,
+      });
+    }
 
-  }, [lat, lng]);
+    // Ajouter un écouteur de clic sur le marqueur
+    marker.addListener("click", () => {
+      if (mapRef.current && infoWindowRef.current) {
+        infoWindowRef.current.open({
+          anchor: marker,
+          map: mapRef.current,
+        });
+      }
+    });
+  };
 
   return (
-    <div 
-      ref={mapContainer} 
-      style={{ 
-        width: '100%', 
-        height: '100%',
-        minHeight: '400px',
-        borderRadius: '0.25rem'
-      }} 
+    <MapView
+      initialCenter={{ lat, lng }}
+      initialZoom={15}
+      onMapReady={handleMapReady}
+      className="w-full h-96"
     />
   );
 }
