@@ -1,25 +1,430 @@
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
-import { Streamdown } from 'streamdown';
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Wrench, Palette, Shield, Clock, Phone, Mail, MapPin, ChevronRight, Star } from "lucide-react";
+import { useState } from "react";
 
 /**
- * All content in this page are only for example, replace with your own feature implementation
- * When building pages, remember your instructions in Frontend Best Practices, Design Guide and Common Pitfalls
+ * Industrial Minimalism Design Philosophy:
+ * - Stark contrast between black, white, and orange
+ * - Geometric shapes and clean lines
+ * - Professional, technical aesthetic
+ * - Orange accent color for CTAs and highlights
+ * - Minimal animations with purpose
  */
+
 export default function Home() {
-  // If theme is switchable in App.tsx, we can implement theme toggling like this:
-  // const { theme, toggleTheme } = useTheme();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    vehicle: "",
+    service: "",
+    message: "",
+  });
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Form submitted:", formData);
+    // Reset form
+    setFormData({ name: "", email: "", phone: "", vehicle: "", service: "", message: "" });
+  };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main>
-        {/* Example: lucide-react for icons */}
-        <Loader2 className="animate-spin" />
-        Example Page
-        {/* Example: Streamdown for markdown rendering */}
-        <Streamdown>Any **markdown** content</Streamdown>
-        <Button variant="default">Example Button</Button>
-      </main>
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Navigation */}
+      <nav className="fixed top-0 left-0 right-0 bg-background/95 backdrop-blur border-b border-border z-50">
+        <div className="container flex items-center justify-between h-16">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-accent"></div>
+            <span className="font-bold text-xl">GARAGE PRO</span>
+          </div>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#services" className="hover:text-accent transition-colors">Services</a>
+            <a href="#gallery" className="hover:text-accent transition-colors">Galerie</a>
+            <a href="#about" className="hover:text-accent transition-colors">À propos</a>
+            <a href="#contact" className="hover:text-accent transition-colors">Contact</a>
+          </div>
+          <Button className="bg-accent text-accent-foreground hover:bg-orange-700">Devis</Button>
+        </div>
+      </nav>
+
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 bg-background relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 -z-10"></div>
+        
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <div className="w-1 h-8 bg-accent"></div>
+                <span className="text-accent font-semibold">EXCELLENCE AUTOMOBILE</span>
+              </div>
+              <h1 className="text-5xl md:text-6xl font-bold leading-tight">
+                Carrosserie & Peinture
+              </h1>
+              <p className="text-xl text-muted-foreground">
+                Expertise professionnelle pour la restauration et la peinture de votre véhicule
+              </p>
+            </div>
+            
+            <div className="flex gap-4 pt-4">
+              <Button className="bg-accent text-accent-foreground hover:bg-orange-700 px-8 py-6 text-lg">
+                Demander un devis
+              </Button>
+              <Button variant="outline" className="px-8 py-6 text-lg border-foreground text-foreground hover:bg-foreground hover:text-background">
+                En savoir plus
+              </Button>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 pt-8">
+              <div>
+                <p className="text-3xl font-bold text-accent">25+</p>
+                <p className="text-muted-foreground">Années d'expérience</p>
+              </div>
+              <div>
+                <p className="text-3xl font-bold text-accent">1000+</p>
+                <p className="text-muted-foreground">Véhicules restaurés</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative h-96 md:h-full">
+            <img 
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/hero-garage-painting-TYNEHqdfDDvUUUecyJDCAK.webp"
+              alt="Peinture professionnelle"
+              className="w-full h-full object-cover border-4 border-accent"
+            />
+            <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-accent/20 border-2 border-accent"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Services Section */}
+      <section id="services" className="py-20 bg-secondary/5 border-t-8 border-accent">
+        <div className="container">
+          <div className="space-y-4 mb-16">
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-8 bg-accent"></div>
+              <span className="text-accent font-semibold">NOS SERVICES</span>
+            </div>
+            <h2 className="section-title">Services Professionnels</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Nous offrons une gamme complète de services de carrosserie et peinture automobile avec les meilleures techniques et matériaux.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              {
+                icon: Palette,
+                title: "Peinture Automobile",
+                description: "Peinture de haute qualité avec finition brillante ou mate, respects des normes écologiques."
+              },
+              {
+                icon: Wrench,
+                title: "Réparation Carrosserie",
+                description: "Réparation des dégâts, débosselage, redressage et remplacement de pièces carrosserie."
+              },
+              {
+                icon: Shield,
+                title: "Protection & Vernis",
+                description: "Application de vernis protecteur, céramique et traitement anti-UV pour longévité."
+              },
+              {
+                icon: Clock,
+                title: "Travail Rapide",
+                description: "Délais courts sans compromettre la qualité, planification flexible selon vos besoins."
+              },
+              {
+                icon: Star,
+                title: "Finition Premium",
+                description: "Finitions haut de gamme avec contrôle qualité rigoureux et garantie satisfaction."
+              },
+              {
+                icon: Wrench,
+                title: "Préparation Véhicule",
+                description: "Préparation complète avant peinture, ponçage, apprêt et masquage professionnel."
+              }
+            ].map((service, idx) => (
+              <Card key={idx} className="service-card group">
+                <service.icon className="w-12 h-12 text-accent mb-4 group-hover:scale-110 transition-transform" />
+                <h3 className="text-xl font-bold mb-2">{service.title}</h3>
+                <p className="text-muted-foreground">{service.description}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section id="gallery" className="py-20 bg-background border-t-8 border-accent">
+        <div className="container">
+          <div className="space-y-4 mb-16">
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-8 bg-accent"></div>
+              <span className="text-accent font-semibold">PORTFOLIO</span>
+            </div>
+            <h2 className="section-title">Nos Réalisations</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Découvrez nos derniers projets de carrosserie et peinture automobile.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/bodywork-repair-DXUKP6ZznLkhWTcJ75P4TC.webp", title: "Réparation Carrosserie" },
+              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/finished-cars-gallery-Wbcx8oV749qKcJri8QpCCt.webp", title: "Galerie Finitions" },
+              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/workshop-overview-RSiXBenAPvQaXXfaBtwpo6.webp", title: "Atelier Professionnel" }
+            ].map((item, idx) => (
+              <div key={idx} className="gallery-item h-64">
+                <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About Section */}
+      <section id="about" className="py-20 bg-secondary/5 border-t-8 border-accent">
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="space-y-4 mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-1 h-8 bg-accent"></div>
+                <span className="text-accent font-semibold">À PROPOS</span>
+              </div>
+              <h2 className="section-title">Expertise & Professionnalisme</h2>
+            </div>
+
+            <p className="text-lg text-muted-foreground mb-6">
+              Depuis plus de 25 ans, notre garage se spécialise dans la carrosserie et la peinture automobile de qualité professionnelle. Nous mettons à disposition notre expertise et notre passion pour chaque projet.
+            </p>
+
+            <ul className="space-y-4">
+              {[
+                "Équipe de techniciens certifiés et expérimentés",
+                "Équipements modernes et techniques de pointe",
+                "Matériaux de peinture de haute qualité",
+                "Garantie satisfaction sur tous les travaux"
+              ].map((item, idx) => (
+                <li key={idx} className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-accent flex-shrink-0 mt-1"></div>
+                  <span className="text-lg">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div className="relative h-96">
+            <img 
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/workshop-overview-RSiXBenAPvQaXXfaBtwpo6.webp"
+              alt="Atelier professionnel"
+              className="w-full h-full object-cover border-4 border-accent"
+            />
+            <div className="absolute -top-4 -left-4 w-24 h-24 bg-accent/20 border-2 border-accent"></div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact & Quote Section */}
+      <section id="contact" className="py-20 bg-background border-t-8 border-accent">
+        <div className="container">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            {/* Contact Info */}
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-1 h-8 bg-accent"></div>
+                  <span className="text-accent font-semibold">CONTACT</span>
+                </div>
+                <h2 className="section-title">Nous Contacter</h2>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-start gap-4">
+                  <Phone className="w-6 h-6 text-accent flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-semibold">Téléphone</p>
+                    <p className="text-muted-foreground">+33 (0)1 23 45 67 89</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <Mail className="w-6 h-6 text-accent flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-semibold">Email</p>
+                    <p className="text-muted-foreground">contact@garagepro.fr</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <MapPin className="w-6 h-6 text-accent flex-shrink-0 mt-1" />
+                  <div>
+                    <p className="font-semibold">Adresse</p>
+                    <p className="text-muted-foreground">123 Rue de l'Industrie<br />75000 Paris, France</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-secondary/10 border border-border p-6">
+                <p className="font-semibold mb-2">Horaires d'ouverture</p>
+                <div className="space-y-1 text-muted-foreground">
+                  <p>Lundi - Vendredi: 08:00 - 18:00</p>
+                  <p>Samedi: 09:00 - 13:00</p>
+                  <p>Dimanche: Fermé</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Quote Form */}
+            <div className="bg-card border border-border p-8">
+              <h3 className="text-2xl font-bold mb-6">Demander un Devis</h3>
+              
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Nom complet *</label>
+                  <Input 
+                    type="text" 
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Jean Dupont"
+                    required
+                    className="bg-background border-border"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Email *</label>
+                    <Input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="jean@example.com"
+                      required
+                      className="bg-background border-border"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold mb-2">Téléphone</label>
+                    <Input 
+                      type="tel" 
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      placeholder="+33 6 12 34 56 78"
+                      className="bg-background border-border"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Véhicule</label>
+                  <Input 
+                    type="text" 
+                    name="vehicle"
+                    value={formData.vehicle}
+                    onChange={handleInputChange}
+                    placeholder="Marque et modèle"
+                    className="bg-background border-border"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Service demandé</label>
+                  <select 
+                    name="service"
+                    value={formData.service}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-border bg-background rounded-sm"
+                  >
+                    <option value="">Sélectionner un service</option>
+                    <option value="painting">Peinture</option>
+                    <option value="bodywork">Réparation carrosserie</option>
+                    <option value="protection">Protection & Vernis</option>
+                    <option value="other">Autre</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold mb-2">Message</label>
+                  <Textarea 
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Décrivez votre projet..."
+                    className="bg-background border-border min-h-24"
+                  />
+                </div>
+
+                <Button 
+                  type="submit"
+                  className="w-full bg-accent text-accent-foreground hover:bg-orange-700 py-6 text-lg font-semibold"
+                >
+                  Envoyer ma demande
+                  <ChevronRight className="w-5 h-5 ml-2" />
+                </Button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-foreground text-background py-12 border-t-8 border-accent">
+        <div className="container">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-6 h-6 bg-accent"></div>
+                <span className="font-bold">GARAGE PRO</span>
+              </div>
+              <p className="text-background/80">Excellence en carrosserie et peinture automobile depuis 1999.</p>
+            </div>
+
+            <div>
+              <p className="font-semibold mb-4">Services</p>
+              <ul className="space-y-2 text-background/80">
+                <li><a href="#services" className="hover:text-accent transition-colors">Peinture</a></li>
+                <li><a href="#services" className="hover:text-accent transition-colors">Carrosserie</a></li>
+                <li><a href="#services" className="hover:text-accent transition-colors">Protection</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="font-semibold mb-4">Entreprise</p>
+              <ul className="space-y-2 text-background/80">
+                <li><a href="#about" className="hover:text-accent transition-colors">À propos</a></li>
+                <li><a href="#gallery" className="hover:text-accent transition-colors">Portfolio</a></li>
+                <li><a href="#contact" className="hover:text-accent transition-colors">Contact</a></li>
+              </ul>
+            </div>
+
+            <div>
+              <p className="font-semibold mb-4">Contact</p>
+              <p className="text-background/80">+33 (0)1 23 45 67 89</p>
+              <p className="text-background/80">contact@garagepro.fr</p>
+            </div>
+          </div>
+
+          <div className="border-t border-background/20 pt-8 flex flex-col md:flex-row justify-between items-center">
+            <p className="text-background/60">&copy; 2026 Garage Pro. Tous droits réservés.</p>
+            <div className="flex gap-6 mt-4 md:mt-0 text-background/60">
+              <a href="#" className="hover:text-accent transition-colors">Mentions légales</a>
+              <a href="#" className="hover:text-accent transition-colors">Politique de confidentialité</a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
