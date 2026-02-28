@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import GarageMap from "@/components/GarageMap";
 import { Wrench, Palette, Shield, Clock, Phone, Mail, MapPin, ChevronRight, Star } from "lucide-react";
 import { useState } from "react";
 
@@ -43,7 +44,7 @@ export default function Home() {
         <div className="container flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 bg-accent"></div>
-            <span className="font-bold text-xl">GARAGE PRO</span>
+            <span className="font-bold text-xl">EL MOUSSAOUI</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#services" className="hover:text-accent transition-colors">Services</a>
@@ -67,10 +68,10 @@ export default function Home() {
                 <span className="text-accent font-semibold">EXCELLENCE AUTOMOBILE</span>
               </div>
               <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                Carrosserie & Peinture
+                El Moussaoui Auto Étoiles
               </h1>
               <p className="text-xl text-muted-foreground">
-                Expertise professionnelle pour la restauration et la peinture de votre véhicule
+                Expertise professionnelle en carrosserie et peinture automobile depuis plus de 25 ans
               </p>
             </div>
             
@@ -204,7 +205,7 @@ export default function Home() {
             </div>
 
             <p className="text-lg text-muted-foreground mb-6">
-              Depuis plus de 25 ans, notre garage se spécialise dans la carrosserie et la peinture automobile de qualité professionnelle. Nous mettons à disposition notre expertise et notre passion pour chaque projet.
+              Depuis plus de 25 ans, El Moussaoui Auto Étoiles se spécialise dans la carrosserie et la peinture automobile de qualité professionnelle. Nous mettons à disposition notre expertise et notre passion pour chaque projet.
             </p>
 
             <ul className="space-y-4">
@@ -252,7 +253,8 @@ export default function Home() {
                   <Phone className="w-6 h-6 text-accent flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-semibold">Téléphone</p>
-                    <p className="text-muted-foreground">+33 (0)1 23 45 67 89</p>
+                    <p className="text-muted-foreground">06 13 87 31 31</p>
+                    <p className="text-muted-foreground">07 45 56 45 81</p>
                   </div>
                 </div>
 
@@ -260,7 +262,7 @@ export default function Home() {
                   <Mail className="w-6 h-6 text-accent flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-semibold">Email</p>
-                    <p className="text-muted-foreground">contact@garagepro.fr</p>
+                    <p className="text-muted-foreground">AMS84@OUTLOOK.FR</p>
                   </div>
                 </div>
 
@@ -268,7 +270,7 @@ export default function Home() {
                   <MapPin className="w-6 h-6 text-accent flex-shrink-0 mt-1" />
                   <div>
                     <p className="font-semibold">Adresse</p>
-                    <p className="text-muted-foreground">123 Rue de l'Industrie<br />75000 Paris, France</p>
+                    <p className="text-muted-foreground">3250 & 3260 Av de l'Amandier<br />84000 Avignon, France</p>
                   </div>
                 </div>
               </div>
@@ -379,6 +381,30 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Map Section */}
+      <section className="py-20 bg-secondary/5 border-t-8 border-accent">
+        <div className="container">
+          <div className="space-y-4 mb-8">
+            <div className="flex items-center gap-3">
+              <div className="w-1 h-8 bg-accent"></div>
+              <span className="text-accent font-semibold">LOCALISATION</span>
+            </div>
+            <h2 className="section-title">Trouvez-nous</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl">
+              Visitez notre atelier à Avignon. Cliquez sur le marqueur pour plus d'informations.
+            </p>
+          </div>
+
+          <div className="w-full h-96 border-4 border-accent rounded-sm overflow-hidden shadow-lg">
+            <GarageMap 
+              address="3250 Avenue de l'Amandier, 84000 Avignon, France"
+              lat={43.9352}
+              lng={4.8084}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-foreground text-background py-12 border-t-8 border-accent">
         <div className="container">
@@ -386,7 +412,7 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-6 h-6 bg-accent"></div>
-                <span className="font-bold">GARAGE PRO</span>
+                <span className="font-bold">EL MOUSSAOUI</span>
               </div>
               <p className="text-background/80">Excellence en carrosserie et peinture automobile depuis 1999.</p>
             </div>
@@ -411,13 +437,13 @@ export default function Home() {
 
             <div>
               <p className="font-semibold mb-4">Contact</p>
-              <p className="text-background/80">+33 (0)1 23 45 67 89</p>
-              <p className="text-background/80">contact@garagepro.fr</p>
+              <p className="text-background/80">06 13 87 31 31</p>
+              <p className="text-background/80">AMS84@OUTLOOK.FR</p>
             </div>
           </div>
 
           <div className="border-t border-background/20 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-background/60">&copy; 2026 Garage Pro. Tous droits réservés.</p>
+            <p className="text-background/60">&copy; 2026 El Moussaoui Auto Étoiles. Tous droits réservés.</p>
             <div className="flex gap-6 mt-4 md:mt-0 text-background/60">
               <a href="#" className="hover:text-accent transition-colors">Mentions légales</a>
               <a href="#" className="hover:text-accent transition-colors">Politique de confidentialité</a>
