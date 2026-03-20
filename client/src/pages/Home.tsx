@@ -100,7 +100,7 @@ export default function Home() {
                 <span className="text-accent font-semibold">EXCELLENCE AUTOMOBILE</span>
               </div>
               <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                El Moussaoui Auto Étoiles
+                Carrosserie & Peinture Automobile à Avignon - El Moussaoui Auto Étoiles
               </h1>
               <p className="text-xl text-muted-foreground">
                 Expertise professionnelle en carrosserie et peinture automobile depuis plus de 25 ans
@@ -131,7 +131,7 @@ export default function Home() {
           <div className="relative h-96 md:h-full">
             <img 
               src="https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/equipe-professionnelle-garage-cxJrj9GXsSeSGVHoFDkDyT.webp"
-              alt="Equipe professionnelle"
+              alt="Equipe professionnelle de carrosserie et peinture automobile - Garage Avignon"
               className="w-full h-full object-cover border-4 border-accent"
             />
             <div className="absolute -top-4 -left-4 w-24 h-24 bg-accent/20 border-2 border-accent"></div>

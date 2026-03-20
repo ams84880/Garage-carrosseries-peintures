@@ -1,0 +1,25 @@
+# Robots.txt - El Moussaoui Auto Étoiles
+# Optimisé pour Google, Bing, et autres moteurs de recherche
+
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /*.json$
+Disallow: /admin
+Disallow: /private
+
+# Spécifique à Google
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Spécifique à Bing
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://garagerepair-yi9ygyzv.manus.space/sitemap.xml
+
+# Délai de crawl par défaut
+Crawl-delay: 1
