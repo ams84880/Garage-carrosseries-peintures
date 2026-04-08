@@ -100,7 +100,7 @@ export default function Home() {
                 <span className="text-accent font-semibold">EXCELLENCE AUTOMOBILE</span>
               </div>
               <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                Carrosserie & Peinture Automobile à Avignon - El Moussaoui Auto Étoiles
+                El Moussaoui Auto Étoiles
               </h1>
               <p className="text-xl text-muted-foreground">
                 Expertise professionnelle en carrosserie et peinture automobile depuis plus de 25 ans
@@ -130,11 +130,11 @@ export default function Home() {
 
           <div className="relative h-96 md:h-full">
             <img 
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/equipe-professionnelle-garage-cxJrj9GXsSeSGVHoFDkDyT.webp"
-              alt="Equipe professionnelle de carrosserie et peinture automobile - Garage Avignon"
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/hero-garage-painting-TYNEHqdfDDvUUUecyJDCAK.webp"
+              alt="Peinture professionnelle"
               className="w-full h-full object-cover border-4 border-accent"
             />
-            <div className="absolute -top-4 -left-4 w-24 h-24 bg-accent/20 border-2 border-accent"></div>
+            <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-accent/20 border-2 border-accent"></div>
           </div>
         </div>
       </section>
@@ -212,9 +212,9 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/reparation-carrosserie-avant-apres-RFEEHCfZawKSVLVupS7b3q.webp", title: "Avant/Après" },
-              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/voiture-finition-premium-HSDvxQniXPJVyMgddModRM.webp", title: "Finition Premium" },
-              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/garage-atelier-professionnel-FXu8vHRS8g8QPnGKUS2Uqe.webp", title: "Atelier Professionnel" }
+              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/bodywork-repair-DXUKP6ZznLkhWTcJ75P4TC.webp", title: "Réparation Carrosserie" },
+              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/finished-cars-gallery-Wbcx8oV749qKcJri8QpCCt.webp", title: "Galerie Finitions" },
+              { img: "https://d2xsxph8kpxj0f.cloudfront.net/310519663363329674/Yi9YgyZVmnr38r2ruWZoJR/workshop-overview-RSiXBenAPvQaXXfaBtwpo6.webp", title: "Atelier Professionnel" }
             ].map((item, idx) => (
               <div key={idx} className="gallery-item h-64">
                 <img src={item.img} alt={item.title} className="w-full h-full object-cover" />

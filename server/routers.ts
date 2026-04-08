@@ -3,7 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
-import { createAppointment, getAppointments, createReview, getApprovedReviews, getAllReviews } from "./db";
+import { createAppointment, getAppointments, createReview, getApprovedReviews } from "./db";
 import { notifyOwner } from "./_core/notification";
 
 export const appRouter = router({
@@ -71,7 +71,6 @@ export const appRouter = router({
       }),
     
     listApproved: publicProcedure.query(() => getApprovedReviews()),
-    listAll: publicProcedure.query(() => getAllReviews()),
   }),
 });
 
