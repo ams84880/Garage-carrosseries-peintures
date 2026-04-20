@@ -14,6 +14,12 @@ build/
 .env.test.local
 .env.production.local
 
+# Claude Code
+.claude/
+
+# Vercel
+.vercel/
+
 # IDE and editor files
 .vscode/
 .idea/
