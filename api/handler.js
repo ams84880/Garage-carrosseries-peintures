@@ -813,3 +813,4 @@ function handler(req, res) {
   }
   return app(req, res);
 }
+module.exports = module.exports.default;
