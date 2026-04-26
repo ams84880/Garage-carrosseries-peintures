@@ -1,3 +1,4 @@
+"use strict";
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
@@ -486,45 +487,51 @@ function createLLMProvider() {
     fetch: createPatchedFetch(fetch)
   });
 }
-var tools = {
-  getWeather: (0, import_ai2.tool)({
-    description: "Get the current weather for a location",
-    inputSchema: import_v4.z.object({
-      location: import_v4.z.string().describe("The city and country, e.g. 'Tokyo, Japan'"),
-      unit: import_v4.z.enum(["celsius", "fahrenheit"]).optional().default("celsius")
-    }),
-    execute: async ({ location, unit }) => {
-      const temp = Math.floor(Math.random() * 30) + 5;
-      const conditions = ["sunny", "cloudy", "rainy", "partly cloudy"][Math.floor(Math.random() * 4)];
-      return {
-        location,
-        temperature: unit === "fahrenheit" ? Math.round(temp * 1.8 + 32) : temp,
-        unit,
-        conditions,
-        humidity: Math.floor(Math.random() * 50) + 30
-      };
-    }
-  }),
-  calculate: (0, import_ai2.tool)({
-    description: "Perform a mathematical calculation",
-    inputSchema: import_v4.z.object({
-      expression: import_v4.z.string().describe("The math expression to evaluate, e.g. '2 + 2'")
-    }),
-    execute: async ({ expression }) => {
-      try {
-        const sanitized = expression.replace(/[^0-9+\-*/().%\s]/g, "");
-        const result = Function(
-          `"use strict"; return (${sanitized})`
-        )();
-        return { expression, result };
-      } catch {
-        return { expression, error: "Invalid expression" };
+var _tools = null;
+function buildTools() {
+  return {
+    getWeather: (0, import_ai2.tool)({
+      description: "Get the current weather for a location",
+      inputSchema: import_v4.z.object({
+        location: import_v4.z.string().describe("The city and country, e.g. 'Tokyo, Japan'"),
+        unit: import_v4.z.enum(["celsius", "fahrenheit"]).optional().default("celsius")
+      }),
+      execute: async ({ location, unit }) => {
+        const temp = Math.floor(Math.random() * 30) + 5;
+        const conditions = ["sunny", "cloudy", "rainy", "partly cloudy"][Math.floor(Math.random() * 4)];
+        return {
+          location,
+          temperature: unit === "fahrenheit" ? Math.round(temp * 1.8 + 32) : temp,
+          unit,
+          conditions,
+          humidity: Math.floor(Math.random() * 50) + 30
+        };
       }
-    }
-  })
-};
+    }),
+    calculate: (0, import_ai2.tool)({
+      description: "Perform a mathematical calculation",
+      inputSchema: import_v4.z.object({
+        expression: import_v4.z.string().describe("The math expression to evaluate, e.g. '2 + 2'")
+      }),
+      execute: async ({ expression }) => {
+        try {
+          const sanitized = expression.replace(/[^0-9+\-*/().%\s]/g, "");
+          const result = Function(
+            `"use strict"; return (${sanitized})`
+          )();
+          return { expression, result };
+        } catch {
+          return { expression, error: "Invalid expression" };
+        }
+      }
+    })
+  };
+}
+function getTools() {
+  if (!_tools) _tools = buildTools();
+  return _tools;
+}
 function registerChatRoutes(app2) {
-  const openai = createLLMProvider();
   app2.post("/api/chat", async (req, res) => {
     try {
       const { messages } = req.body;
@@ -532,11 +539,12 @@ function registerChatRoutes(app2) {
         res.status(400).json({ error: "messages array is required" });
         return;
       }
+      const openai = createLLMProvider();
       const result = (0, import_ai.streamText)({
         model: openai.chat("gpt-4o"),
         system: "You are a helpful assistant. You have access to tools for getting weather and doing calculations. Use them when appropriate.",
         messages,
-        tools,
+        tools: getTools(),
         stopWhen: (0, import_ai.stepCountIs)(5)
       });
       result.pipeUIMessageStreamToResponse(res);
