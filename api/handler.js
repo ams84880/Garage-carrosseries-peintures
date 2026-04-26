@@ -27,12 +27,12 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 
-// api/[...all].ts
-var all_exports = {};
-__export(all_exports, {
+// scripts/api-handler.source.ts
+var api_handler_source_exports = {};
+__export(api_handler_source_exports, {
   default: () => handler
 });
-module.exports = __toCommonJS(all_exports);
+module.exports = __toCommonJS(api_handler_source_exports);
 
 // server/_core/app.ts
 var import_config = require("dotenv/config");
@@ -782,7 +782,7 @@ function createApp() {
   return app2;
 }
 
-// api/[...all].ts
+// scripts/api-handler.source.ts
 var app = null;
 var initError = null;
 try {
