@@ -1,11 +1,11 @@
 import { build } from "esbuild";
-import { rmSync, mkdirSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 
 const root = resolve(import.meta.dirname, "..");
-const entry = resolve(root, "api/[...all].ts");
+const entry = resolve(root, "scripts/api-handler.source.ts");
 const outdir = resolve(root, "api");
-const outfile = resolve(outdir, "[...all].js");
+const outfile = resolve(outdir, "handler.js");
 
 console.log("[bundle-api] Bundling", entry);
 
@@ -25,9 +25,6 @@ await build({
 });
 
 console.log("[bundle-api] Wrote", outfile);
-
-rmSync(entry);
-console.log("[bundle-api] Removed source", entry);
 
 writeFileSync(
   resolve(outdir, "package.json"),
