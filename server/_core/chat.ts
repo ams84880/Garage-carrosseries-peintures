@@ -30,8 +30,13 @@ function createLLMProvider() {
 
 /**
  * Example tool registry - customize these for your app.
+ * Lazily constructed inside a getter so the AI SDK + zod schemas only run
+ * when the chat endpoint is actually invoked (avoids module-load crashes
+ * in serverless environments that lack the optional config).
  */
-const tools = {
+let _tools: ReturnType<typeof buildTools> | null = null;
+function buildTools() {
+  return {
   getWeather: tool({
     description: "Get the current weather for a location",
     inputSchema: z.object({
@@ -76,7 +81,13 @@ const tools = {
       }
     },
   }),
-};
+  };
+}
+
+function getTools() {
+  if (!_tools) _tools = buildTools();
+  return _tools;
+}
 
 /**
  * Registers the /api/chat endpoint for streaming AI responses.
@@ -90,8 +101,6 @@ const tools = {
  * ```
  */
 export function registerChatRoutes(app: Express) {
-  const openai = createLLMProvider();
-
   app.post("/api/chat", async (req, res) => {
     try {
       const { messages } = req.body;
@@ -101,12 +110,13 @@ export function registerChatRoutes(app: Express) {
         return;
       }
 
+      const openai = createLLMProvider();
       const result = streamText({
         model: openai.chat("gpt-4o"),
         system:
           "You are a helpful assistant. You have access to tools for getting weather and doing calculations. Use them when appropriate.",
         messages,
-        tools,
+        tools: getTools(),
         stopWhen: stepCountIs(5),
       });
 
@@ -120,4 +130,4 @@ export function registerChatRoutes(app: Express) {
   });
 }
 
-export { tools };
+export { getTools };
