@@ -1,30 +1,26 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
+import { createApp } from "../server/_core/app";
 
 type Handler = (req: IncomingMessage, res: ServerResponse) => unknown;
 
-let cached: { handler?: Handler; error?: Error } | null = null;
+let app: Handler | null = null;
+let initError: Error | null = null;
 
-async function loadHandler(): Promise<{ handler?: Handler; error?: Error }> {
-  if (cached) return cached;
-  try {
-    const { createApp } = await import("../server/_core/app");
-    cached = { handler: createApp() as unknown as Handler };
-  } catch (err) {
-    cached = { error: err instanceof Error ? err : new Error(String(err)) };
-  }
-  return cached;
+try {
+  app = createApp() as unknown as Handler;
+} catch (err) {
+  initError = err instanceof Error ? err : new Error(String(err));
 }
 
-export default async function handler(req: IncomingMessage, res: ServerResponse) {
-  const { handler: app, error } = await loadHandler();
-  if (error) {
+export default function handler(req: IncomingMessage, res: ServerResponse) {
+  if (initError) {
     res.statusCode = 500;
     res.setHeader("content-type", "application/json");
     res.end(
       JSON.stringify({
         error: "App initialization failed",
-        message: error.message,
-        stack: error.stack,
+        message: initError.message,
+        stack: initError.stack,
         env: {
           SUPABASE_URL: !!process.env.SUPABASE_URL,
           VITE_SUPABASE_URL: !!process.env.VITE_SUPABASE_URL,
