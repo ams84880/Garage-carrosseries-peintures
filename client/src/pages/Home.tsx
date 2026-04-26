@@ -108,11 +108,11 @@ export default function Home() {
             </div>
             
             <div className="flex gap-4 pt-4">
-              <Button className="bg-accent text-accent-foreground hover:bg-orange-700 px-8 py-6 text-lg">
-                Demander un devis
+              <Button asChild className="bg-accent text-accent-foreground hover:bg-orange-700 px-8 py-6 text-lg">
+                <a href="#contact">Demander un devis</a>
               </Button>
-              <Button variant="outline" className="px-8 py-6 text-lg border-foreground text-foreground hover:bg-foreground hover:text-background">
-                En savoir plus
+              <Button asChild variant="outline" className="px-8 py-6 text-lg border-foreground text-foreground hover:bg-foreground hover:text-background">
+                <a href="#services">En savoir plus</a>
               </Button>
             </div>
 
