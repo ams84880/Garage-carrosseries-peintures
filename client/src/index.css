@@ -223,9 +223,7 @@
   }
 }
 
-/* Typography - Roboto for headings, Inter for body */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
-
+/* Typography - Roboto for headings, Inter for body (fonts loaded via <link> in index.html) */
 html {
   font-family: 'Inter', sans-serif;
 }
