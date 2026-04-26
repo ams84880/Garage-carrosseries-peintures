@@ -22,6 +22,9 @@ await build({
   alias: {
     "@shared": resolve(root, "shared"),
   },
+  footer: {
+    js: "module.exports = module.exports.default;",
+  },
 });
 
 console.log("[bundle-api] Wrote", outfile);
