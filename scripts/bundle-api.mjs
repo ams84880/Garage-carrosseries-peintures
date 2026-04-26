@@ -16,7 +16,7 @@ await build({
   platform: "node",
   format: "cjs",
   target: "node20",
-  packages: "external",
+  external: ["aws-sdk"],
   sourcemap: false,
   logLevel: "info",
   alias: {
